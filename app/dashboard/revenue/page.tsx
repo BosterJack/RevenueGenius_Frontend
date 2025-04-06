@@ -440,8 +440,8 @@ function handleDeleteClick(item: any) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{topSource}</div>
-            <p className="text-xs text-muted-foreground">
+            {/* <div className="text-2xl font-bold">{topSource}</div> */}
+            <p className="text-2xl font-bold">
               ${topAmount.toFixed(2)}
             </p>
           </CardContent>

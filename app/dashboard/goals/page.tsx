@@ -50,13 +50,12 @@ export default function GoalsPage() {
           <CardHeader>
             <div className="flex items-center justify-between gap-1">
               <div>
-               
                 <CardTitle>Set a Goal</CardTitle>{" "}
                 <CardDescription>
                   Create a new goal with milestones
                 </CardDescription>
               </div>
-            {/* <div>
+              {/* <div>
               <Button
                 disabled={!selected}
                 onClick={() => setIsGoalFormMilestoneOpen(true)}
@@ -80,7 +79,6 @@ export default function GoalsPage() {
                   Overview of your current goals
                 </CardDescription>
               </div>
-              
             </div>
           </CardHeader>
           <CardContent>
@@ -89,18 +87,18 @@ export default function GoalsPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="hidden">
         <CardHeader>
           <div className="flex items-center justify-between gap-1">
             <div>
- <CardTitle>Milestone Timeline</CardTitle>
-          <CardDescription>
-            Visualize your milestones on a timeline
-          </CardDescription>
+              <CardTitle>Milestone Timeline</CardTitle>
+              <CardDescription>
+                Visualize your milestones on a timeline
+              </CardDescription>
             </div>
             <div>
               <Button
-              variant={"outline"}
+                variant={"outline"}
                 disabled={!selected}
                 onClick={() => setIsGoalFormMilestoneOpen(true)}
               >
@@ -109,7 +107,6 @@ export default function GoalsPage() {
               </Button>
             </div>
           </div>
-         
         </CardHeader>
         <CardContent>
           <MilestoneViewToggle />

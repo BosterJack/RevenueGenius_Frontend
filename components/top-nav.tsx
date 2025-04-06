@@ -49,6 +49,7 @@ const router = useRouter()
     email: user?.email,
     last_name: user?.last_name,
     first_name: user?.first_name,
+    isActive : user?.subscription?.id
   }
  
   const formatRelativeTime = (dateString: string): string => {
@@ -88,19 +89,19 @@ const router = useRouter()
 const handleLogout = () => {
   localStorage.removeItem("ACCESS_TOKEN")
  
-  router.push("/signin")
+  router.push("/login")
 }
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4">
-        <div><BusinessDropdown/></div>
+        {userData?.isActive && <div><BusinessDropdown/></div>}
         <div className="ml-auto flex items-center space-x-4">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input type="search" placeholder="Search..." className="w-[200px] lg:w-[300px] pl-8" />
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger className={`${!userData?.isActive && "cursor-not-allowed pointer-events-none "}`} asChild>
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
                 {Array.isArray(notifications) && notifications.some((n) => !n.is_read) && (

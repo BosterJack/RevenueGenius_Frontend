@@ -27,7 +27,7 @@ interface SidebarProps {
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-const {user}=useAuth()
+  const { user } = useAuth();
 
   const routes = [
     {
@@ -72,12 +72,12 @@ const {user}=useAuth()
       href: "/dashboard/revenue",
       active: pathname === "/dashboard/revenue",
     },
-    {
-      label: "Subscription",
-      icon: DollarSign,
-      href: "/dashboard/subscription",
-      active: pathname === "/dashboard/subscription",
-    },
+    // {
+    //   label: "Subscription",
+    //   icon: DollarSign,
+    //   href: "/dashboard/subscription",
+    //   active: pathname === "/dashboard/subscription",
+    // },
     {
       label: "Users management",
       icon: UserCog2Icon,
@@ -111,7 +111,7 @@ const {user}=useAuth()
       >
         <div className="flex h-16 items-center border-b px-6">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-brand-gold flex items-center justify-center">
               <FileText className="h-4 w-4 text-white" />
             </div>
             <span className="font-bold text-xl">Jerry Genie</span>
@@ -124,16 +124,20 @@ const {user}=useAuth()
                 key={route.href}
                 href={route.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-brand-blue",
+                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-brand-gold",
                   route.active
-                    ? "bg-brand-blue/10 text-brand-blue"
-                    : "text-gray-500"
+                    ? "bg-brand-gold/10 text-brand-gold"
+                    : "text-gray-500",
+
+                  !user?.is_admin && route.label === "Users management"
+                    ? "hidden"
+                    : ""
                 )}
               >
                 <route.icon
                   className={cn(
                     "h-4 w-4",
-                    route.active ? "text-brand-blue" : "text-gray-500"
+                    route.active ? "text-brand-gold" : "text-gray-500"
                   )}
                 />
                 {route.label}
@@ -142,16 +146,18 @@ const {user}=useAuth()
           </nav>
         </div>
         <div className="mt-auto p-4">
-          <div className="rounded-lg bg-brand-blue/10 p-4">
+          <div className="rounded-lg bg-brand-gold/10 p-4">
             <div className="flex items-center gap-4">
-              <div className="rounded-full bg-brand-blue h-10 w-10 flex items-center justify-center">
+              <div className="rounded-full bg-brand-gold h-10 w-10 flex items-center justify-center">
                 <FileText className="h-5 w-5 text-white" />
               </div>
               <div>
                 <p className="text-xs font-medium text-gray-500">
                   Subscription
                 </p>
-                <p className="font-medium">Pro Plan</p>
+                <p className="font-medium">
+                  {(user && user.subscription?.plan_details?.name) || "Free"}
+                </p>
               </div>
             </div>
           </div>

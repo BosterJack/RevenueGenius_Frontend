@@ -113,7 +113,7 @@ const {setIsGoalSuccess}=useSelected()
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 
                 <FormField
                   control={form.control}
@@ -122,7 +122,7 @@ const {setIsGoalSuccess}=useSelected()
                     <FormItem>
                       <FormLabel>Target Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input className="w-full" type="date" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

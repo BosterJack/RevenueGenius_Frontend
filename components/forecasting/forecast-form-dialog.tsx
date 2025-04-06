@@ -203,7 +203,7 @@ console.log(forecastData,"forecastData00")
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>{forecastData ? "Update Forecast" : "New Forecast "+typeId}</DialogTitle>
+            <DialogTitle>{forecastData ? "Update Forecast" : "New Forecast "+typeId?typeId:""}</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

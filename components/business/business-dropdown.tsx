@@ -14,6 +14,7 @@ import { useBusiness } from "@/hooks/useBusiness"
 import { useState } from "react"
 import { BusinessManagementSheet } from "./business-management-sheet"
 import { NewBusinessSheet } from "./new-business-sheet"
+import { Badge } from "../ui/badge"
 
 export function BusinessDropdown() {
   const { businesses, activeBusiness, isLoadingBusinesses, setActiveBusiness, isSettingActiveBusiness } = useBusiness()
@@ -37,7 +38,7 @@ export function BusinessDropdown() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="gap-2">
             <Building2 className="h-4 w-4" />
-            {activeBusiness ? activeBusiness.name : "Business"}
+            {Array.isArray(businesses) && businesses?.length > 0 ? businesses[0]?.name  : "Business"}<Badge className="bg-green-500" variant="default">Active</Badge>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[250px] ml-80">
@@ -47,6 +48,8 @@ export function BusinessDropdown() {
               variant="ghost"
               size="sm"
               className="h-8 px-2 gap-1"
+              disabled={Array.isArray(businesses) &&
+              businesses?.length > 0}
               onClick={() => setIsNewBusinessSheetOpen(true)}
             >
               <Plus className="h-3.5 w-3.5" /> New
@@ -62,7 +65,7 @@ export function BusinessDropdown() {
                 <div className="flex items-center justify-between w-full px-2 py-1.5">
                   <span className="text-sm truncate max-w-[120px]">{business.name}</span>
                   <div className="flex items-center gap-1">
-                    <Button
+                    {/* <Button
                       variant="ghost"
                       size="sm"
                       className="h-7 px-2 text-xs"
@@ -73,7 +76,7 @@ export function BusinessDropdown() {
                         <Check className="h-3.5 w-3.5 text-green-500 mr-1" />
                       ) : null}
                       {activeBusiness?.id === business.id ? "Active" : "Set Active"}
-                    </Button>
+                    </Button> */}
                     <Button
                       variant="ghost"
                       size="sm"
