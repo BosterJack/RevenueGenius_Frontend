@@ -3,7 +3,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { contentService } from "@/lib/api"
 import type { Content, } from "@/types/content"
-import { ContentFormValues, ContentPerformanceFormValues } from "@/lib/validations/content"
+import { ContentFormValues, ContentPerformanceFormValues, PerformanceFormValues } from "@/lib/validations/content"
+import { create } from "domain"
 
 export function useContent() {
   const queryClient = useQueryClient()
@@ -41,6 +42,20 @@ export function useContent() {
       queryClient.invalidateQueries({ queryKey: ["contentTrends"] })
     },
   })
+const createContentPerformanceMutation = useMutation({
+  mutationFn: ({
+    contentData,
+    contentId,
+  }: {
+    contentData: PerformanceFormValues;
+    contentId: string;
+  }) => contentService.createContentPerformance(contentData, contentId),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["content"] });
+    queryClient.invalidateQueries({ queryKey: ["contentRoi"] });
+    queryClient.invalidateQueries({ queryKey: ["contentTrends"] });
+  },
+});
 
   // Mutation pour mettre à jour du contenu
   const updateContentMutation = useMutation({
@@ -63,14 +78,22 @@ export function useContent() {
   })
 
   // Mutation pour mettre à jour les performances du contenu
-  const updateContentPerformanceMutation = useMutation({
-    mutationFn: ({ contentId, data }: { contentId: string; data: ContentPerformanceFormValues }) =>
-      contentService.updateContentPerformance(contentId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["content"] })
-      queryClient.invalidateQueries({ queryKey: ["contentRoi"] })
-    },
-  })
+ const updateContentPerformanceMutation = useMutation({
+  mutationFn: ({ contentId, data, performanceId }: { contentId: string; data: ContentPerformanceFormValues; performanceId: string }) =>
+    contentService.updateContentPerformance(contentId, data, performanceId),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["content"] })
+    queryClient.invalidateQueries({ queryKey: ["contentRoi"] })
+  },
+})
+
+const deleteContentPerformanceMutation = useMutation({
+  mutationFn: ({ id, performanceId }: { id: string; performanceId: string }) => contentService.deleteContentPerformance(id, performanceId),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["content"] })
+    queryClient.invalidateQueries({ queryKey: ["contentRoi"] })
+  },
+})
 
   // Fonction pour exporter le contenu au format CSV
   const exportContent = () => {
@@ -122,6 +145,10 @@ export function useContent() {
     updateContentPerformance: updateContentPerformanceMutation.mutate,
     isUpdatingContentPerformance: updateContentPerformanceMutation.isPending,
     exportContent,
+    createContentPerformance: createContentPerformanceMutation.mutate,
+    isCreatingContentPerformance: createContentPerformanceMutation.isPending,
+    deleteContentPerformance: deleteContentPerformanceMutation.mutate,
+    isDeletingContentPerformance: deleteContentPerformanceMutation.isPending
   }
 }
 

@@ -70,15 +70,18 @@ export default function DashboardLayout({
         color="#B91C1C"
         showSpinner={true}
       />
-      <BusinessGuard>
-        <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80] bg-white">
-          <Sidebar />
+       <BusinessGuard>
+      <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[20] bg-white">
+        <Sidebar />
+      </div>
+      <main className="md:pl-72">
+        <TopNav />
+        <div className="p-8">
+         {children}
         </div>
-        <main className="md:pl-72">
-          <TopNav />
-          <div className="p-8">{children}</div>
-        </main>
+      </main>
       </BusinessGuard>
+
     </div>
   );
 }

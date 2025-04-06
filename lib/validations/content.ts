@@ -17,3 +17,25 @@ export const contentPerformanceSchema = z.object({
 export type ContentFormValues = z.infer<typeof contentSchema>
 export type ContentPerformanceFormValues = z.infer<typeof contentPerformanceSchema>
 
+
+export const performanceSchema = z.object({
+ 
+  visits: z.coerce
+    .number()
+    .int("Visits must be an integer")
+    .min(0, "Visits cannot be negative")
+    .max(2147483647, "Value too large"),
+  leads: z.coerce
+    .number()
+    .int("Leads must be an integer")
+    .min(0, "Leads cannot be negative")
+    .max(2147483647, "Value too large"),
+  conversions: z.coerce
+    .number()
+    .int("Conversions must be an integer")
+    .min(0, "Conversions cannot be negative")
+    .max(2147483647, "Value too large"),
+})
+
+export type PerformanceFormValues = z.infer<typeof performanceSchema>
+

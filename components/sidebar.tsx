@@ -1,18 +1,33 @@
-"use client"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { BarChart3, LineChart, Users, FileText, Target, Calculator, Settings, Home, Menu, X } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  BarChart3,
+  LineChart,
+  Users,
+  FileText,
+  Target,
+  Calculator,
+  Settings,
+  Home,
+  Menu,
+  X,
+  DollarSign,
+  UserCog2Icon,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
 
 interface SidebarProps {
-  className?: string
+  className?: string;
 }
 
 export function Sidebar({ className }: SidebarProps) {
-  const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+const {user}=useAuth()
 
   const routes = [
     {
@@ -58,12 +73,24 @@ export function Sidebar({ className }: SidebarProps) {
       active: pathname === "/dashboard/revenue",
     },
     {
+      label: "Subscription",
+      icon: DollarSign,
+      href: "/dashboard/subscription",
+      active: pathname === "/dashboard/subscription",
+    },
+    {
+      label: "Users management",
+      icon: UserCog2Icon,
+      href: "/dashboard/users-management",
+      active: pathname === "/dashboard/users-management",
+    },
+    {
       label: "Settings",
       icon: Settings,
       href: "/dashboard/settings",
       active: pathname === "/dashboard/settings",
     },
-  ]
+  ];
 
   return (
     <>
@@ -79,7 +106,7 @@ export function Sidebar({ className }: SidebarProps) {
         className={cn(
           "fixed inset-y-0 left-0 flex w-72 flex-col bg-white border-r shadow-sm transition-transform duration-300 ease-in-out md:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
-          className,
+          className
         )}
       >
         <div className="flex h-16 items-center border-b px-6">
@@ -91,17 +118,24 @@ export function Sidebar({ className }: SidebarProps) {
           </Link>
         </div>
         <div className="flex-1 overflow-auto py-2">
-          <nav className="grid items-start px-4 text-sm font-medium">
+          <nav className="grid items-start space-y-2 px-4 text-sm font-medium">
             {routes.map((route) => (
               <Link
                 key={route.href}
                 href={route.href}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-brand-blue",
-                  route.active ? "bg-brand-blue/10 text-brand-blue" : "text-gray-500",
+                  route.active
+                    ? "bg-brand-blue/10 text-brand-blue"
+                    : "text-gray-500"
                 )}
               >
-                <route.icon className={cn("h-4 w-4", route.active ? "text-brand-blue" : "text-gray-500")} />
+                <route.icon
+                  className={cn(
+                    "h-4 w-4",
+                    route.active ? "text-brand-blue" : "text-gray-500"
+                  )}
+                />
                 {route.label}
               </Link>
             ))}
@@ -114,7 +148,9 @@ export function Sidebar({ className }: SidebarProps) {
                 <FileText className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="text-xs font-medium text-gray-500">Subscription</p>
+                <p className="text-xs font-medium text-gray-500">
+                  Subscription
+                </p>
                 <p className="font-medium">Pro Plan</p>
               </div>
             </div>
@@ -122,5 +158,5 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
       </div>
     </>
-  )
+  );
 }

@@ -76,3 +76,8 @@ export interface ContentInsight {
   description: string
 }
 
+export interface Performance {
+  visits: number
+  leads: number
+  conversions: number
+}

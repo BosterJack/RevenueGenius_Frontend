@@ -85,7 +85,11 @@ const router = useRouter()
   function markOneAsRead(notificationId: string) {
     markOneNotificationAsRead({ id: notificationId, data: { is_read: true } })
   }
-
+const handleLogout = () => {
+  localStorage.removeItem("ACCESS_TOKEN")
+ 
+  router.push("/signin")
+}
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4">
@@ -242,14 +246,14 @@ const router = useRouter()
               <DropdownMenuItem asChild>
                 <Link href="/dashboard/settings">Profile</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
+              {/* <DropdownMenuItem asChild>
                 <Link href="/dashboard/settings?tab=business">Business</Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem asChild>
-                <Link href="/dashboard/settings?tab=subscription">Subscription</Link>
+                <Link href="/dashboard/subscription">Subscription</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
                 <LogoutButton variant="ghost" size="sm" className="w-full justify-start p-0" />
               </DropdownMenuItem>
             </DropdownMenuContent>

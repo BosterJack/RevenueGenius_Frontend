@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { useSubscriptions } from "@/hooks/use-subscription"
 
 // Sample data
 const subscriptionsData = [
@@ -41,10 +42,11 @@ export default function SubscriptionsView() {
       day: "numeric",
     })
   }
-
+const {subscriptions:subscriptionsData,isLoadingSubscriptions}=useSubscriptions()
   // Calculate metrics
-  const activeSubscriptions = subscriptionsData.filter((sub) => sub.is_active).length
-  const totalRevenue = subscriptionsData.reduce((sum, sub) => {
+  const activeSubscriptions = Array.isArray(subscriptionsData) && subscriptionsData.filter((sub) => sub.is_active).length
+  //@ts-ignore
+  const totalRevenue =subscriptionsData && subscriptionsData?.reduce((sum, sub) => {
     const price = Number.parseFloat(sub.plan_details.price)
     return sum + price
   }, 0)
@@ -67,7 +69,7 @@ export default function SubscriptionsView() {
             <CardTitle className="text-sm font-medium">Monthly Recurring Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalRevenue.toFixed(2)}</div>
+            <div className="text-2xl font-bold">${totalRevenue && totalRevenue?.toFixed(2) || 0}</div>
           </CardContent>
         </Card>
         <Card>
@@ -75,7 +77,11 @@ export default function SubscriptionsView() {
             <CardTitle className="text-sm font-medium">Annual Projected Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${(totalRevenue * 12).toFixed(2)}</div>
+          <div className="text-2xl font-bold">
+  ${(totalRevenue ? totalRevenue * 12 : 0).toFixed(2)}
+</div>
+
+
           </CardContent>
         </Card>
       </div>
@@ -89,7 +95,7 @@ export default function SubscriptionsView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>User ID</TableHead>
+                {/* <TableHead>User ID</TableHead> */}
                 <TableHead>Plan</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Billing Cycle</TableHead>
@@ -99,9 +105,9 @@ export default function SubscriptionsView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {subscriptionsData.map((subscription) => (
+              {Array.isArray(subscriptionsData) && subscriptionsData.map((subscription) => (
                 <TableRow key={subscription.id}>
-                  <TableCell>{subscription.user}</TableCell>
+                  {/* <TableCell>{subscription.user}</TableCell> */}
                   <TableCell>{subscription.plan_details.name}</TableCell>
                   <TableCell>${subscription.plan_details.price}</TableCell>
                   <TableCell>{subscription.plan_details.billing_cycle_display}</TableCell>

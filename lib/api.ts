@@ -302,8 +302,13 @@ export const contentService = {
     return response.data
   },
 
-  updateContentPerformance: async (contentId: string, performanceData: any): Promise<any> => {
-    const response = await axiosClient.post(`/api/content/${contentId}/performance/`, performanceData)
+  createContentPerformance: async (contentData: any, contentId: string): Promise<any> => {
+    const response = await axiosClient.post(`/api/content/${contentId}/performance/`, contentData)
+    return response.data
+  },
+
+  updateContentPerformance: async (contentId: string, performanceData: any,performanceId: string): Promise<any> => {
+    const response = await axiosClient.put(`/api/content/${contentId}/performance/${performanceId}/`, performanceData)
     return response.data
   },
 
@@ -337,6 +342,11 @@ export const contentService = {
 
   getContentInsights: async (): Promise<any> => {
     const response = await axiosClient.get("/api/content/insights/")
+    return response.data
+  },
+
+   deleteContentPerformance: async (contentId: string,performanceId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/content/${contentId}/performance/${performanceId}/`)
     return response.data
   },
 }
