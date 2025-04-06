@@ -86,6 +86,23 @@ const { data: notifications, isLoading: isLoadingNotifications } = useQuery({
     mutationFn: (userData: any) => authService.updateProfile(userData,),
     
   })
+   const markAllNotifReadStatus = useMutation({
+
+    mutationFn: ({notifData}: { notifData: {is_read:boolean} }) => authService.markAllNotificationsAsRead(notifData),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["notifications"] })
+       
+      },
+    
+  })
+
+   const markOneNotificationAsRead = useMutation({
+      mutationFn: ({ id, data }: { id: string; data: {is_read:boolean} }) => authService.markOneNotificationAsRead( data,id),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["notifications"] })
+       
+      },
+    })
 
   
   return {
@@ -107,7 +124,15 @@ const { data: notifications, isLoading: isLoadingNotifications } = useQuery({
     registerSuccess: registerMutation.isSuccess,
     logout,
     notifications,
-    isLoadingNotifications
+    isLoadingNotifications,
+    markAllNotifReadStatus:markAllNotifReadStatus.mutate,
+    isMarkAllNotifReadStatus: markAllNotifReadStatus.isPending,
+    markAllNotifReadStatusError: markAllNotifReadStatus.error,
+    markAllNotifReadStatusSuccess: markAllNotifReadStatus.isSuccess,
+    markOneNotificationAsRead:markOneNotificationAsRead.mutate,
+    isMarkOneNotificationAsRead: markOneNotificationAsRead.isPending,
+    markOneNotificationAsReadError: markOneNotificationAsRead.error,
+    markOneNotificationAsReadSuccess: markOneNotificationAsRead.isSuccess
   }
 }
 

@@ -19,7 +19,7 @@ export function useForecasting() {
       const today = new Date()
       const sixMonthsAgo = new Date()
       sixMonthsAgo.setMonth(today.getMonth() - 6)
-
+//@ts-ignore
       return revenueService.getRevenueData(sixMonthsAgo.toISOString().split("T")[0], today.toISOString().split("T")[0])
     },
   })
@@ -60,6 +60,24 @@ export function useForecasting() {
     },
   })
 
+
+  // Mutation pour mettre à jour un objectif
+    const updateForecatsMutation = useMutation({
+      mutationFn: ({ id, data }: { id: string; data: Partial<any> }) => forecastService.updateForecast(id, data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["forecasts"] })
+        queryClient.invalidateQueries({ queryKey: ["revenueData"] })
+      },
+    })
+
+
+ // Mutation pour supprimer un seuil de rentabilité
+  const deleteForecastMutation = useMutation({
+    mutationFn: (id: string) => forecastService.deleteForecast(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forecasts"] })
+    },
+  })
   // Fonction pour exporter les prévisions au format CSV
   const exportForecasts = () => {
     if (!forecasts?.results) return
@@ -86,6 +104,8 @@ export function useForecasting() {
     revenueData,
     isLoadingForecasts,
     isLoadingRevenueData,
+    deleteForecast: deleteForecastMutation.mutate,
+    isDeletingForecast: deleteForecastMutation.isPending,
     generateForecast: generateForecastMutation.mutate,
     isGeneratingForecast: generateForecastMutation.isPending,
     isGeneratingForecastSuccess: generateForecastMutation.isSuccess,
@@ -101,6 +121,8 @@ export function useForecasting() {
     addRevenueData: addRevenueDataMutation.mutate,
     isAddingRevenueData: addRevenueDataMutation.isPending,
     exportForecasts,
+    updateForecats: updateForecatsMutation.mutate,
+    isUpdatingForecats: updateForecatsMutation.isPending
   }
 }
 

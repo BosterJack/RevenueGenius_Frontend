@@ -37,6 +37,14 @@ export function useGoals() {
       queryClient.invalidateQueries({ queryKey: ["activeGoals"] })
     },
   })
+ // Mutation pour supprimer du contenu
+  const deleteGoalMutation = useMutation({
+    mutationFn: (id: string) => goalService.deleteGoal(id),
+    onSuccess: () => {
+       queryClient.invalidateQueries({ queryKey: ["goals"] })
+      queryClient.invalidateQueries({ queryKey: ["activeGoals"] })
+    },
+  })
 
   // Mutation pour marquer un objectif comme complété
   const markGoalCompletedMutation = useMutation({
@@ -65,9 +73,12 @@ export function useGoals() {
       data,
     }: { goalId: string; milestoneId: string; data: Partial<MilestoneFormValues> }) =>
       goalService.updateMilestone(goalId, milestoneId, data),
-    onSuccess: () => {
+    onSuccess: (variables) => {
+      const { goalId } = variables;
       queryClient.invalidateQueries({ queryKey: ["goals"] })
       queryClient.invalidateQueries({ queryKey: ["activeGoals"] })
+      queryClient.invalidateQueries({ queryKey: ["goalMilestone", goalId] })
+      
     },
   })
 
@@ -75,12 +86,28 @@ export function useGoals() {
   const markMilestoneCompletedMutation = useMutation({
     mutationFn: ({ goalId, milestoneId }: { goalId: string; milestoneId: string }) =>
       goalService.markMilestoneCompleted(goalId, milestoneId),
-    onSuccess: () => {
+    onSuccess: (variables) => {
+      const { goalId } = variables;
       queryClient.invalidateQueries({ queryKey: ["goals"] })
       queryClient.invalidateQueries({ queryKey: ["activeGoals"] })
+       queryClient.invalidateQueries({ queryKey: ["goalMilestone", goalId] })
     },
   })
-
+const deleteMilestoneGoalMutation = useMutation({
+  mutationFn: ({ goalId, milestoneId }: { goalId: string; milestoneId: string }) => goalService.deleteGoalMilestone(goalId, milestoneId),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["goals"] })
+    queryClient.invalidateQueries({ queryKey: ["activeGoals"] })
+    queryClient.invalidateQueries({ queryKey: ["leadAnalytics"] })
+  },
+})
+ const useGoalMilestones = (goalId: string | undefined) => {
+  return useQuery({
+    queryKey: ["goalMilestone", goalId],
+    queryFn: () => goalService.getGoalMilestone(goalId!),
+    enabled: !!goalId,
+  })
+}
   // Fonction pour exporter les objectifs au format CSV
   const exportGoals = () => {
     if (!goals?.results) return
@@ -140,6 +167,11 @@ export function useGoals() {
     markMilestoneCompleted: markMilestoneCompletedMutation.mutate,
     isMarkingMilestoneCompleted: markMilestoneCompletedMutation.isPending,
     exportGoals,
+     deleteGoal: deleteGoalMutation.mutate,
+     isCreationMilestoneSuccess:createMilestoneMutation.isSuccess, isUpdatingMilestoneSuccess:updateMilestoneMutation.isSuccess,
+     deleteMilestoneGoal: deleteMilestoneGoalMutation.mutate,
+     isDeletingMilestoneGoal: deleteMilestoneGoalMutation.isPending,
+      goalMilestone: useGoalMilestones,
   }
 }
 

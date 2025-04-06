@@ -1,3 +1,4 @@
+import { Business } from "@/types/businesse"
 import axiosClient from "./axios-client"
 import type { AuthResponse } from "@/types/api"
 
@@ -27,11 +28,14 @@ export const authService = {
     return response.data
   },
 
-  // updateProfile: async (profileData: any): Promise<any> => {
-  //   const response = await axiosClient.put("/api/users/update_profile/", profileData)
-  //   return response.data
-  // },
-
+  markAllNotificationsAsRead: async (notifData: any): Promise<any> => {
+    const response = await axiosClient.post("/api/notifications/mark_all_as_read/", notifData)
+    return response.data
+  },
+markOneNotificationAsRead: async (notifData: any, notificationId: string): Promise<any> => {
+  const response = await axiosClient.post(`/api/notifications/${notificationId}/mark_as_read/`, notifData)
+  return response.data
+},
   updateProfile: async (profileData: any): Promise<any> => {
   const response = await axiosClient.put("/api/users/update_profile/", profileData, {
     headers: {
@@ -44,17 +48,7 @@ export const authService = {
 }
 
 // Service pour les entreprises
-export const businessService = {
-  getBusinesses: async (): Promise<any> => {
-    const response = await axiosClient.get("/api/businesses/")
-    return response.data
-  },
 
-  updateBusiness: async (businessId: string, businessData: any): Promise<any> => {
-    const response = await axiosClient.put(`/api/businesses/${businessId}/`, businessData)
-    return response.data
-  },
-}
 
 // Service pour les abonnements
 export const subscriptionService = {
@@ -71,12 +65,72 @@ export const revenueService = {
     return response.data
   },
 
-  getRevenueData: async (startDate: string, endDate: string): Promise<any> => {
-    const response = await axiosClient.get(`/api/revenue-data/?start_date=${startDate}&end_date=${endDate}`)
+  getRevenueData: async (): Promise<any> => {
+    const response = await axiosClient.get(`/api/revenue-data/`)
     return response.data
   },
+
+    updateRevenue: async (revenueId: string, revenueData: any): Promise<any> => {
+    const response = await axiosClient.put(`/api/revenue-data/${revenueId}/`, revenueData)
+    return response.data
+  },
+
+  deleteRevenue: async (revenueId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/revenue-data/${revenueId}/`)
+    return response.data
+  },
+
 }
 
+
+
+export const planService = {
+  addPlanData: async (plansData: any): Promise<any> => {
+    const response = await axiosClient.post("/api/plans/", plansData)
+    return response.data
+  },
+
+  getPlanData: async (): Promise<any> => {
+    const response = await axiosClient.get(`/api/plans/`)
+    return response.data
+  },
+
+    updatePlan: async (planId: string, planData: any): Promise<any> => {
+    const response = await axiosClient.put(`/api/plans/${planId}/`, planData)
+    return response.data
+  },
+
+  deletePlan: async (planId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/plans/${planId}/`)
+    return response.data
+  },
+
+}
+
+
+
+// export const subscriptionService = {
+//   addPlanData: async (plansData: any): Promise<any> => {
+//     const response = await axiosClient.post("/api/plans/", plansData)
+//     return response.data
+//   },
+
+//   getPlanData: async (): Promise<any> => {
+//     const response = await axiosClient.get(`/api/plans/`)
+//     return response.data
+//   },
+
+//     updatePlan: async (planId: string, planData: any): Promise<any> => {
+//     const response = await axiosClient.put(`/api/plans/${planId}/`, planData)
+//     return response.data
+//   },
+
+//   deletePlan: async (planId: string): Promise<any> => {
+//     const response = await axiosClient.delete(`/api/plans/${planId}/`)
+//     return response.data
+//   },
+
+// }
 // Service pour les prévisions
 export const forecastService = {
   generateForecast: async (months: number, scenario: string): Promise<any> => {
@@ -98,13 +152,54 @@ export const forecastService = {
     const response = await axiosClient.post("/api/break-even/calculate/", breakEvenData)
     return response.data
   },
-
+ addBreakEven: async (breakEvenData: any): Promise<any> => {
+    const response = await axiosClient.post("/api/break-even/", breakEvenData)
+    return response.data
+  },
   createWhatIfScenario: async (scenarioData: any): Promise<any> => {
     const response = await axiosClient.post("/api/forecasts/what_if_scenario/", scenarioData)
     return response.data
   },
-}
 
+   deleteForecast: async (forecastId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/forecasts/${forecastId}/`)
+    return response.data
+  },
+
+  updateBreakEven: async (breakEvenId: string, breakEvenData: any): Promise<any> => {
+    const response = await axiosClient.put(`/api/break-even/${breakEvenId}/`, breakEvenData)
+    return response.data
+  },
+
+  updateForecast: async (forecastId: string, forecastData: any): Promise<any> => {
+    const response = await axiosClient.put(`/api/forecasts/${forecastId}/`, forecastData)
+    return response.data
+  },
+}
+export const breakEvenService = {
+  getBreakEven: async (): Promise<any> => {
+    const response = await axiosClient.get("/api/break-even/")
+    return response.data
+  },
+  calculateBreakEven: async (breakEvenData: any): Promise<any> => {
+    const response = await axiosClient.post("/api/break-even/calculate/", breakEvenData)
+    return response.data
+  },
+ addBreakEven: async (breakEvenData: any): Promise<any> => {
+    const response = await axiosClient.post("/api/break-even/", breakEvenData)
+    return response.data
+  },
+ 
+   deleteBreakEven: async (breakId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/break-even/${breakId}/`)
+    return response.data
+  },
+
+  updateBreakEven: async (breakEvenId: string, breakEvenData: any): Promise<any> => {
+    const response = await axiosClient.put(`/api/break-even/${breakEvenId}/`, breakEvenData)
+    return response.data
+  },
+}
 // Service pour les leads
 export const leadService = {
   createLead: async (leadData: any): Promise<any> => {
@@ -149,7 +244,20 @@ export const leadService = {
     const response = await axiosClient.get("/api/leads/analytics/")
     return response.data
   },
+  getLeadInterractions: async (leadId: string): Promise<any> => {
+    const response = await axiosClient.get(`/api/leads/${leadId}/interactions/`)
+    return response.data
+  },
 
+   updateLeadInterractions: async (leadId: string,interactionId: string, leadData: any): Promise<any> => {
+    const response = await axiosClient.put(`/api/leads/${leadId}/interactions/${interactionId}/`, leadData)
+    return response.data
+  },
+
+   deleteLeadInterractions: async (leadId: string,interactionId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/leads/${leadId}/interactions/${interactionId}/`)
+    return response.data
+  },
   getLeadInsights: async (): Promise<any> => {
     const response = await axiosClient.get("/api/leads/insights/")
     return response.data
@@ -254,7 +362,10 @@ export const goalService = {
     const response = await axiosClient.put(`/api/goals/${goalId}/`, goalData)
     return response.data
   },
-
+ deleteGoal: async (goalId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/goals/${goalId}/`)
+    return response.data
+  },
   markGoalCompleted: async (goalId: string): Promise<any> => {
     const response = await axiosClient.post(`/api/goals/${goalId}/mark_completed/`)
     return response.data
@@ -272,6 +383,14 @@ export const goalService = {
 
   markMilestoneCompleted: async (goalId: string, milestoneId: string): Promise<any> => {
     const response = await axiosClient.post(`/api/goals/${goalId}/milestones/${milestoneId}/mark_completed/`)
+    return response.data
+  },
+   deleteGoalMilestone: async (goalId: string,milestoneId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/goals/${goalId}/milestones/${milestoneId}/`)
+    return response.data
+  },
+  getGoalMilestone: async (goalId: string): Promise<any> => {
+    const response = await axiosClient.get(`/api/goals/${goalId}/milestones/`)
     return response.data
   },
 }
@@ -298,4 +417,37 @@ export const notificationService = {
     return response.data
   },
 }
+
+export const businessService = {
+  getBusinesses: async (): Promise<{ results: Business[] }> => {
+    const response = await axiosClient.get("/api/businesses/")
+    return response.data
+  },
+
+  getBusiness: async (id: string): Promise<Business> => {
+    const response = await axiosClient.get(`/api/businesses/${id}/`)
+    return response.data
+  },
+
+  createBusiness: async (businessData: Partial<Business>): Promise<Business> => {
+    const response = await axiosClient.post("/api/businesses/", businessData)
+    return response.data
+  },
+
+  updateBusiness: async (id: string, businessData: Partial<Business>): Promise<Business> => {
+    const response = await axiosClient.put(`/api/businesses/${id}/`, businessData)
+    return response.data
+  },
+
+  deleteBusiness: async (id: string): Promise<void> => {
+    await axiosClient.delete(`/api/businesses/${id}/`)
+  },
+
+  setActiveBusinesses: async (id: string): Promise<void> => {
+    await axiosClient.post(`/api/businesses/${id}/set_active/`)
+  },
+}
+
+
+
 

@@ -11,9 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, Edit, ChevronLeft, ChevronRight } from "lucide-react";
+import { MoreHorizontal, Edit, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { useContent } from "@/hooks/use-content";
-
+import { ContentFormDialog } from "./content-form-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Content } from "@/types/content";
 interface ContentPerformanceTableProps {
   filter?: string;
 }
@@ -24,7 +35,7 @@ export function ContentPerformanceTable({ filter }: ContentPerformanceTableProps
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const { content: contents } = useContent();
+  const { content: contents,deleteContent } = useContent();
 //@ts-ignore
   const filteredContents = filter ?Array.isArray(contents) & contents?.filter((content) => content.type === filter) : contents ||[];
 
@@ -53,6 +64,26 @@ export function ContentPerformanceTable({ filter }: ContentPerformanceTableProps
       setSortDirection("asc");
     }
   };
+
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedContent, setSelectedContent] = useState<Content| null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+const handleEdit = (content: Content) => {
+    setSelectedContent(content)
+    setIsEditDialogOpen(true)
+  }
+const handleDelete = (content: Content) => {
+    setSelectedContent(content)
+    setIsDeleteDialogOpen(true)
+  }
+
+    const confirmDelete = async () => {
+    if (selectedContent) {
+      await deleteContent(selectedContent.id)
+      setIsDeleteDialogOpen(false)
+      setSelectedContent(null)
+    }
+  }
 
   return (
     <div className="rounded-md border">
@@ -90,11 +121,29 @@ export function ContentPerformanceTable({ filter }: ContentPerformanceTableProps
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuSeparator />
-                    {/* <DropdownMenuItem>
-                      <Edit className="mr-2 h-4 w-4" />
-                      <span>Edit</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem> */}
+                    <DropdownMenuItem onClick={() => handleEdit(content)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        <span>Edit</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDelete(content)}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Delete</span>
+                      </DropdownMenuItem>
+                      {/* <DropdownMenuItem onClick={() => handleDelete(content)}>
+                        <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onContentClick(content.id)
+                      }}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                      <span className="sr-only">View</span>
+                    </Button>
+                      </DropdownMenuItem> */}
+                     
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
@@ -113,6 +162,33 @@ export function ContentPerformanceTable({ filter }: ContentPerformanceTableProps
          <ChevronRight/>
         </Button>
       </div>
+      {selectedContent && (
+        <>
+          <ContentFormDialog
+            isOpen={isEditDialogOpen}
+            onClose={() => {
+              setIsEditDialogOpen(false)
+              setSelectedContent(null)
+            }}
+            content={selectedContent}
+          />
+
+          <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to delete this content?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action is irreversible. The content {selectedContent?.title} will be permanently deleted.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setSelectedContent(null)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
+      )}
     </div>
   );
 }

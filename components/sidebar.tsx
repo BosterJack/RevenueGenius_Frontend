@@ -22,7 +22,7 @@ export function Sidebar({ className }: SidebarProps) {
       active: pathname === "/dashboard",
     },
     {
-      label: "Revenue Forecasting",
+      label: " Forecasting",
       icon: LineChart,
       href: "/dashboard/forecasting",
       active: pathname === "/dashboard/forecasting",
@@ -46,10 +46,16 @@ export function Sidebar({ className }: SidebarProps) {
       active: pathname === "/dashboard/goals",
     },
     {
-      label: "Financial Calculators",
+      label: "Break even",
       icon: Calculator,
-      href: "/dashboard/calculators",
-      active: pathname === "/dashboard/calculators",
+      href: "/dashboard/break-even",
+      active: pathname === "/dashboard/break-even",
+    },
+    {
+      label: "Revenue",
+      icon: FileText,
+      href: "/dashboard/revenue",
+      active: pathname === "/dashboard/revenue",
     },
     {
       label: "Settings",

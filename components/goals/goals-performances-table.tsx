@@ -11,9 +11,21 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { MoreHorizontal, ChevronLeft, ChevronRight, CheckCircle2, Clock, AlertCircle } from "lucide-react"
+import { MoreHorizontal, ChevronLeft, ChevronRight, CheckCircle2, Clock, AlertCircle, Edit, Trash2, Check } from "lucide-react"
 import { useGoals } from "@/hooks/use-goals"
 import { useSelected } from "@/app/provider"
+import { Goal } from "@/types/goals"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { GoalFormDialog } from "./goal-form-dialog"
 
 export function GoalsTable() {
   const [sortColumn, setSortColumn] = useState("target_date")
@@ -21,7 +33,7 @@ export function GoalsTable() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 5
 
-  const { goals } = useGoals()
+  const { goals,deleteGoal ,markGoalCompleted,isMarkingGoalCompleted} = useGoals()
   const { selected, setSelected } = useSelected()
 
   const getStatusIcon = (status: string) => {
@@ -76,9 +88,33 @@ export function GoalsTable() {
       setSortDirection("asc")
     }
   }
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedContent, setSelectedContent] = useState<Goal| null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+const handleEdit = (content: Goal) => {
+    setSelectedContent(content)
+    setIsEditDialogOpen(true)
+  }
+const handleDelete = (content: Goal) => {
+    setSelectedContent(content)
+    setIsDeleteDialogOpen(true)
+  }
 
+    const confirmDelete = async () => {
+    if (selectedContent) {
+      await deleteGoal(selectedContent.id)
+      setIsDeleteDialogOpen(false)
+      setSelectedContent(null)
+    }
+  }
+
+  const handleMarkMilestoneCompleted=async(goal:any)=>{
+    //@ts-ignore
+    await markGoalCompleted(goal.id)
+   
+  }
   return (
-    <div className="rounded-md border">
+    <div className={`rounded-md border ${isMarkingGoalCompleted && "opacity-50"}`}>
       <Table>
         <TableHeader>
           <TableRow>
@@ -156,8 +192,18 @@ export function GoalsTable() {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>View Details</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Edit Goal</DropdownMenuItem>
-                    <DropdownMenuItem>Delete Goal</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleEdit(goal)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        <span>Edit</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDelete(goal)}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Delete</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleMarkMilestoneCompleted(goal)}>
+                            <Check className="mr-2 h-4 w-4" />
+                            Mark as Completed
+                          </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
@@ -186,6 +232,34 @@ export function GoalsTable() {
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
+
+       {selectedContent && (
+        <>
+          <GoalFormDialog
+            isOpen={isEditDialogOpen}
+            onClose={() => {
+              setIsEditDialogOpen(false)
+              setSelectedContent(null)
+            }}
+            goal={selectedContent}
+          />
+
+          <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to delete this goal?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action is irreversible. The goal {selectedContent?.name} will be permanently deleted.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setSelectedContent(null)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
+      )}
     </div>
   )
 }

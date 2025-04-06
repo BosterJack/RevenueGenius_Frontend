@@ -79,23 +79,32 @@
 //   )
 // }
 
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { PlusCircle } from "lucide-react"
-import { LeadMetricsCards } from "@/components/leads/lead-metrics-cards"
-import { LeadAcquisitionChart } from "@/components/leads/lead-acquisition-chart"
-import { LeadSourcePieChart } from "@/components/leads/lead-source-pie-chart"
-import { LeadStatusTabs } from "@/components/leads/lead-status-tabs"
-import { LeadInsightsPanel } from "@/components/leads/lead-insights-panel"
-import { LeadFormDialog } from "@/components/leads/lead-form-dialog"
-import { useLeads } from "@/hooks/use-leads"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import { LeadMetricsCards } from "@/components/leads/lead-metrics-cards";
+import { LeadAcquisitionChart } from "@/components/leads/lead-acquisition-chart";
+import { LeadSourcePieChart } from "@/components/leads/lead-source-pie-chart";
+import { LeadStatusTabs } from "@/components/leads/lead-status-tabs";
+import { LeadInsightsPanel } from "@/components/leads/lead-insights-panel";
+import { LeadFormDialog } from "@/components/leads/lead-form-dialog";
+import { useLeads } from "@/hooks/use-leads";
+import LtvCacAnalysis from "@/components/leads/leads-ltv";
+import LeadSegmentation from "@/components/leads/lead-segmentation";
+import LeadInteractions from "@/components/leads/lead-interraction";
 
 export default function LeadsPage() {
-  const [isLeadFormOpen, setIsLeadFormOpen] = useState(false)
-  const { exportLeads } = useLeads()
+  const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
+  const { exportLeads } = useLeads();
 
   return (
     <div className="flex flex-col gap-5">
@@ -118,7 +127,9 @@ export default function LeadsPage() {
         <Card className="col-span-4">
           <CardHeader>
             <CardTitle>Lead Acquisition</CardTitle>
-            <CardDescription>Acquisition trend over the last 6 months</CardDescription>
+            <CardDescription>
+              Acquisition trend over the last 6 months
+            </CardDescription>
           </CardHeader>
           <CardContent className="pl-2">
             <LeadAcquisitionChart />
@@ -127,7 +138,9 @@ export default function LeadsPage() {
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Lead Sources</CardTitle>
-            <CardDescription>Distribution by acquisition channel</CardDescription>
+            <CardDescription>
+              Distribution by acquisition channel
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <LeadSourcePieChart />
@@ -138,24 +151,71 @@ export default function LeadsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Lead Management</CardTitle>
-          <CardDescription>Track and manage your prospects until conversion</CardDescription>
+          <CardDescription>
+            Track and manage your prospects until conversion
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <LeadStatusTabs />
         </CardContent>
       </Card>
+     
+
+       <Card>
+        <CardHeader>
+          <CardTitle> Lead Segmentation</CardTitle>
+          <CardDescription>
+            Analyze customer acquisition costs and lifetime value to optimize
+            marketing strategy and improve ROI.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <LeadSegmentation />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
+          <CardTitle> Lead Interactions</CardTitle>
+          <CardDescription>
+            Gain insights into customer behavior and preferences to enhance
+            targeting and increase conversion rates.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          < LeadInteractions />
+        </CardContent>
+      </Card>
+     
+      <Card>
+        <CardHeader>
+          <CardTitle>LTV/CAC Analysis</CardTitle>
+          <CardDescription>
+            Analyze your customer acquisition costs and lifetime value to
+            optimize your marketing strategy and improve your return on
+            investment.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <LtvCacAnalysis />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
           <CardTitle>Lead Insights</CardTitle>
-          <CardDescription>Analytics and recommendations to optimize conversions</CardDescription>
+          <CardDescription>
+            Analytics and recommendations to optimize conversions
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <LeadInsightsPanel />
         </CardContent>
       </Card>
 
-      <LeadFormDialog isOpen={isLeadFormOpen} onClose={() => setIsLeadFormOpen(false)} />
+      <LeadFormDialog
+        isOpen={isLeadFormOpen}
+        onClose={() => setIsLeadFormOpen(false)}
+      />
     </div>
-  )
+  );
 }

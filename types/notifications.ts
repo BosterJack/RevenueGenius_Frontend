@@ -4,7 +4,7 @@ export interface Notification {
   id: string
   title: string
   message: string
-  category: NotificationCategory
+  category: string
   category_display: string
   action_url: string | null
   created_at: string

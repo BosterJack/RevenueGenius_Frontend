@@ -13,7 +13,15 @@ export function useLeads() {
     queryKey: ["leads"],
     queryFn: () => leadService.getLeads(),
   })
+const { data: leadsSegmentation, isLoading: isLoadingLeadsSegmentation } = useQuery({
+    queryKey: ["leadSegmentation"],
+    queryFn: () => leadService.getAdvancedSegmentation(),
+  })
 
+  const { data: leadsLTV, isLoading: isLoadingLeadsLTV } = useQuery({
+    queryKey: ["leadLTV"],
+    queryFn: () => leadService.getLTVCACAnalysis(),
+  })
   // Récupérer les analytics des leads
   const { data: leadAnalytics, isLoading: isLoadingAnalytics } = useQuery({
     queryKey: ["leadAnalytics"],
@@ -52,14 +60,38 @@ export function useLeads() {
       queryClient.invalidateQueries({ queryKey: ["leadAnalytics"] })
     },
   })
+const deleteLeadInterractionMutation = useMutation({
+  mutationFn: ({ id, interactionId }: { id: string; interactionId: string }) => leadService.deleteLeadInterractions(id, interactionId),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["leads"] })
+    queryClient.invalidateQueries({ queryKey: ["leadsInterractions"] })
+    queryClient.invalidateQueries({ queryKey: ["leadAnalytics"] })
+  },
+})
 
+const updateLeadInterractionMutation = useMutation({
+    mutationFn: ({ id, interactionId, data }: { id: string; interactionId: string; data: Partial<Lead> }) => leadService.updateLeadInterractions(id, interactionId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] })
+      queryClient.invalidateQueries({ queryKey: ["leadsInterractions"] })
+    },
+  })
   // Mutation pour ajouter une interaction à un lead
   const addLeadInteractionMutation = useMutation({
     mutationFn: ({ leadId, data }: { leadId: string; data: any }) => leadService.addLeadInteraction(leadId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["leads"] })
+      queryClient.invalidateQueries({ queryKey: ["leadsInterractions"] })
     },
   })
+ const useLeadInterractions = (leadId: string | undefined) => {
+  return useQuery({
+    queryKey: ["leadsInterractions", leadId],
+    queryFn: () => leadService.getLeadInterractions(leadId!),
+    enabled: !!leadId,
+  })
+}
+
 
   // Fonction pour exporter les leads au format CSV
   const exportLeads = () => {
@@ -98,6 +130,8 @@ export function useLeads() {
     isLoadingLeads,
     isLoadingAnalytics,
     isLoadingInsights,
+    leadsSegmentation,
+    isLoadingLeadsSegmentation,
     createLead: createLeadMutation.mutate,
     isCreatingLead: createLeadMutation.isPending,
     isCreatingLeadSuccess: createLeadMutation.isSuccess,
@@ -109,6 +143,14 @@ export function useLeads() {
     addLeadInteraction: addLeadInteractionMutation.mutate,
     isAddingLeadInteraction: addLeadInteractionMutation.isPending,
     exportLeads,
+    deleteLeadInterraction: deleteLeadInterractionMutation.mutate,
+    isDeletingLeadInterraction: deleteLeadInterractionMutation.isPending,
+    updateLeadInterraction: updateLeadInterractionMutation.mutate,
+    isUpdatingLeadInterraction: updateLeadInterractionMutation.isPending,
+    leadsInterractions: useLeadInterractions,
+    leadsLTV,
+    isLoadingLeadsLTV
+
   }
 }
 
