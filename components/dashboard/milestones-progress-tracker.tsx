@@ -1,64 +1,71 @@
-import { Progress } from "@/components/ui/progress"
 import { useGoals } from "@/hooks/use-goals"
 import { CheckCircle2, Clock } from "lucide-react"
+import { format } from "date-fns"
+import { cn } from "@/lib/utils"
 
 export function MilestonesProgressTracker() {
-    const {goals}=  useGoals()
-  const milestones = [
-    {
-      id: 1,
-      name: "Atteindre 10 000€ de revenus mensuels",
-      progress: 80,
-      target: "10 000€",
-      current: "8 000€",
-      dueDate: "30 juin 2023",
-      completed: false,
-    },
-    {
-      id: 2,
-      name: "Acquérir 100 nouveaux leads",
-      progress: 65,
-      target: "100",
-      current: "65",
-      dueDate: "15 juillet 2023",
-      completed: false,
-    },
-    {
-      id: 3,
-      name: "Lancer 5 nouveaux contenus",
-      progress: 100,
-      target: "5",
-      current: "5",
-      dueDate: "1 juin 2023",
-      completed: true,
-    },
-  ]
+  const { goals } = useGoals()
 
   return (
-    <div className="space-y-6">
-      {Array.isArray(goals) && goals.map((milestone) => (
-        <div key={milestone.id} className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {milestone.is_completed ? (
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-              ) : (
-                <Clock className="h-5 w-5 text-amber-500" />
-              )}
-              <span className="font-medium">{milestone.name}</span>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+      {Array.isArray(goals) && goals.map((milestone) => {
+        const isCompleted = milestone.is_completed
+        const formattedDate = milestone.target_date
+          ? format(new Date(milestone.target_date), "dd MMM yyyy")
+          : "Another date"
+
+        const progressColor =
+          milestone.progress_percentage >= 100
+            ? "bg-green-500"
+            : milestone.progress_percentage >= 70
+            ? "bg-yellow-400"
+            : "bg-red-400"
+
+        return (
+          <div
+            key={milestone.id}
+            className="bg-white dark:bg-muted rounded-xl border p-4 shadow hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                {isCompleted ? (
+                  <CheckCircle2 className="text-green-500 h-4 w-4" />
+                ) : (
+                  <Clock className="text-yellow-500 h-4 w-4" />
+                )}
+                <h3 className="font-semibold text-sm">{milestone.name}</h3>
+              </div>
+              <span
+                className={cn(
+                  "text-xs px-2 py-0.5 rounded-full font-medium",
+                  isCompleted
+                    ? "bg-green-100 text-green-700"
+                    : "bg-yellow-100 text-yellow-700"
+                )}
+              >
+                {isCompleted ? "✓ Success" : "⏳ Pending"}
+              </span>
             </div>
-            <div className="text-sm text-muted-foreground">
-              {milestone.current_value} / {milestone.target_value}
+
+            <div className="text-xs text-muted-foreground mb-2">
+              Current value : {milestone.current_value} - Target value : {milestone.target_value}
+            </div>
+
+            {/* Capsule progress */}
+            <div className="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
+              <div
+                className={cn("absolute left-0 top-0 h-full", progressColor)}
+                style={{ width: `${milestone.progress_percentage}%` }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+              <span>Progress: {milestone.progress_percentage}%</span>
+              <span>Deadline: {formattedDate}</span>
             </div>
           </div>
-          <Progress value={milestone.progress_percentage} className="h-2" />
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Progress: {milestone.progress_percentage}%</span>
-            <span>Deadline: {milestone?.target_date}</span>
-          </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
-

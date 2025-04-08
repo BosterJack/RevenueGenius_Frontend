@@ -292,8 +292,8 @@ export default function DashboardPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Milestone Progress</CardTitle>
-              <CardDescription>Track your goals and milestones</CardDescription>
+              <CardTitle>Goals Progress</CardTitle>
+              <CardDescription>Track your goals progress</CardDescription>
             </CardHeader>
             <CardContent>
               <MilestonesProgressTracker />

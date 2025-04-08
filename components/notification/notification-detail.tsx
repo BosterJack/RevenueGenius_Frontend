@@ -54,13 +54,13 @@ export default function NotificationDetail({
         <span>{new Date(notification.created_at).toLocaleString()}</span>
       </div>
 
-      {notification.action_url && (
+      {/* {notification.action_url && (
         <Button asChild className="w-full mt-2">
           <Link href={notification.action_url} className="flex items-center justify-center">
             Take Action <ExternalLink className="ml-2 h-4 w-4" />
           </Link>
         </Button>
-      )}
+      )} */}
     </div>
   )
 }

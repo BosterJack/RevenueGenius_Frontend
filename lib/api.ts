@@ -52,11 +52,49 @@ markOneNotificationAsRead: async (notifData: any, notificationId: string): Promi
 
 // Service pour les abonnements
 export const subscriptionService = {
+  // Create a new subscription
+  createSubscription: async (subscriptionData: any): Promise<any> => {
+    const response = await axiosClient.post("/api/subscriptions/", subscriptionData)
+    return response.data
+  },
+
+  // Get all subscriptions
   getSubscriptions: async (): Promise<any> => {
     const response = await axiosClient.get("/api/subscriptions/")
     return response.data
   },
+
+  // Update a specific subscription
+  updateSubscription: async (subscriptionId: string, updatedData: any): Promise<any> => {
+    const response = await axiosClient.put(`/api/subscriptions/${subscriptionId}/`, updatedData)
+    return response.data
+  },
+
+  // Delete a specific subscription
+  deleteSubscription: async (subscriptionId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/subscriptions/${subscriptionId}/`)
+    return response.data
+  },
+
+  // Cancel a subscription
+  cancelSubscription: async (subscriptionId: string): Promise<any> => {
+    const response = await axiosClient.post(`/api/subscriptions/${subscriptionId}/cancel/`)
+    return response.data
+  },
+
+  // Create a payment intent for a subscription
+  createPaymentIntent: async (paymentData: any): Promise<any> => {
+    const response = await axiosClient.post(`/api/subscriptions/create_payment_intent/`, paymentData)
+    return response.data
+  },
+
+  // Confirm payment for a subscription
+  confirmPayment: async ( paymentData: any): Promise<any> => {
+    const response = await axiosClient.post(`/api/subscriptions/confirm_payment/`, paymentData)
+    return response.data
+  },
 }
+
 
 // Service pour les données de revenus
 export const revenueService = {
@@ -458,6 +496,42 @@ export const businessService = {
   },
 }
 
+
+
+// services/paymentMethodService.ts
+
+
+export const paymentMethodService = {
+  // Create a new payment method
+  createPaymentMethod: async (paymentData: any): Promise<any> => {
+    const response = await axiosClient.post("/api/payment-methods/", paymentData)
+    return response.data
+  },
+
+  // Get all saved payment methods
+  getPaymentMethods: async (): Promise<any> => {
+    const response = await axiosClient.get("/api/payment-methods/")
+    return response.data
+  },
+
+  // Update a specific payment method (e.g., mark as default)
+  updatePaymentMethod: async (paymentMethodId: string, updatedData: any): Promise<any> => {
+    const response = await axiosClient.put(`/api/payment-methods/${paymentMethodId}/`, updatedData)
+    return response.data
+  },
+
+  // Delete a specific payment method
+  deletePaymentMethod: async (paymentMethodId: string): Promise<any> => {
+    const response = await axiosClient.delete(`/api/payment-methods/${paymentMethodId}/`)
+    return response.data
+  },
+
+  setDefaultPaymentMethod: async (paymentMethodId: string): Promise<any> => {
+  const response = await axiosClient.post(`/api/payment-methods/${paymentMethodId}/set-default/`)
+  return response.data
+}
+
+}
 
 
 

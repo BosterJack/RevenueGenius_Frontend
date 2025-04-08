@@ -3,7 +3,8 @@ import "./globals.css"
 import { Inter,Plus_Jakarta_Sans } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { TanstackQueryProvider } from "@/lib/tanstack-query"
-
+import { SelectedProvider } from "./provider"
+import { Suspense } from "react"
 const inter = Plus_Jakarta_Sans({ subsets: ["latin"] })
 
 export const metadata = {
@@ -20,11 +21,13 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={inter.className}>
+         <Suspense fallback={<div></div>}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <SelectedProvider>
           <TanstackQueryProvider>{children}</TanstackQueryProvider>
           </SelectedProvider>
         </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   )
@@ -32,5 +35,3 @@ export default function RootLayout({
 
 
 
-import './globals.css'
-import { SelectedProvider } from "./provider"

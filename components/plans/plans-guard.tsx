@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useBusiness } from "@/hooks/useBusiness";
 import { NewBusinessSheet } from "@/components/business/new-business-sheet";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { usePlans } from "@/hooks/use-plans";
+import { useSearchParams } from "next/navigation";
 
 interface PlanGuardProps {
   children: React.ReactNode;
@@ -16,13 +17,19 @@ export function PlanGuard({ children }: PlanGuardProps) {
   const { user, isLoadingUser } = useAuth();
   const [isNewBusinessSheetOpen, setIsNewBusinessSheetOpen] = useState(false);
   const { plans } = usePlans();
-  const handlePlanSelection = (planId: string) => {
+  const handlePlanSelection = (planId: string,index: number) => {
     localStorage.setItem("selectedPlan", planId);
-    window.location.href = "/plans/checkout";
+    window.location.href = `/dashboard/payment?checkout=${index}`;
   };
+  const searchParams =useSearchParams()
+ const id = searchParams.get("checkout") 
+  const [selectedPlan, setSelectedPlan] = useState(null) 
+  useEffect(() => {
+    // @ts-ignore
+    setSelectedPlan(id)
+  }, [id,plans])
   if (isLoadingUser) return null;
-
-  if (!user?.subscription?.id) {
+  if (!user?.subscription?.id && !selectedPlan) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center">
         <p className="text-lg text-gray-600 max-w-md mt-10">
@@ -31,7 +38,7 @@ export function PlanGuard({ children }: PlanGuardProps) {
         </p>
         <div className="container mx-auto mt-10 grid md:grid-cols-3 gap-6">
           {Array.isArray(plans) &&
-            plans.map((plan) => (
+            plans.map((plan,index) => (
               <div
                 key={plan.id}
                 className="bg-white border text-gray-800 rounded-lg overflow-hidden"
@@ -96,10 +103,10 @@ export function PlanGuard({ children }: PlanGuardProps) {
                     </div>
                   </div>
                   <Button
-                    onClick={() => handlePlanSelection(plan?.id as string)}
+                    onClick={() => handlePlanSelection(plan?.id as string,index)}
                     className="mt-auto bg-brand-gold hover:bg-amber-500 text-white"
                   >
-                    SIGN UP
+                    Continue with {plan.name}
                   </Button>
                 </div>
               </div>

@@ -152,11 +152,11 @@ export default function NotificationsPage() {
     <div className="container py-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <Link href="/dashboard">
+          {/* <Link href="/dashboard">
             <Button variant="outline" size="sm" className="gap-1">
               <ArrowLeft className="h-4 w-4" /> Back
             </Button>
-          </Link>
+          </Link> */}
           <h1 className="text-2xl font-bold">Notifications</h1>
         </div>
 
