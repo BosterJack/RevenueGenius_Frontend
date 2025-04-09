@@ -14,6 +14,7 @@ import { usePaymentMethods } from "@/hooks/use-paymentMethods"
 import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 import { useSearchParams } from "next/navigation"
+import { useSelected } from "@/app/provider"
 
 
 // Sample data based on the provided formats
@@ -231,10 +232,10 @@ export default function CheckoutPage() {
   useEffect(() => {
     setSelectedPlan(Array.isArray(plans) && plans[id as number])
   }, [id,plans])
-  const [activeTab, setActiveTab] = useState("payment-methods")
+const {activeTab,setActiveTab}=useSelected()
+  // const [activeTab, setActiveTab] = useState("payment-methods")
   const [isProcessing, setIsProcessing] = useState(false)
   // stripe_payment_method_id
-
   const [stripePaymentMethodId, setStripePaymentMethodId] = useState<string | null>(null)
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<string | null>(null)
 //   const [paymentMethods, setPaymentMethods] = useState(initialPaymentMethods)
