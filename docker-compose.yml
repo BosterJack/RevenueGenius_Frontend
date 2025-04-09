@@ -1,0 +1,19 @@
+services:
+  revenuegenius_nextjs:
+    restart: unless-stopped
+    container_name: revenuegenius_nextjs
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    # volumes:
+    #   - .:/home/app/web
+    networks:
+      - revenuegenius_frontend
+    env_file:
+      - .env
+
+networks:
+  revenuegenius_frontend:
+    external: true
