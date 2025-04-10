@@ -54,6 +54,12 @@ export function useSubscriptions() {
   // Confirmer un paiement
   const confirmPaymentMutation = useMutation({
     mutationFn: (paymentData: any) => subscriptionService.confirmPayment(paymentData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subscriptions"] })
+      queryClient.invalidateQueries({ queryKey: ["paymentMethods"] })
+      queryClient.invalidateQueries({ queryKey: ["plans"] })
+      queryClient.invalidateQueries({ queryKey: ["businesses"] })
+    },
   })
 
   return {
@@ -81,5 +87,6 @@ export function useSubscriptions() {
 
     confirmPayment: confirmPaymentMutation.mutate,
     isConfirmingPayment: confirmPaymentMutation.isPending,
+    isConfirmSuccess: confirmPaymentMutation.isSuccess,
   }
 }

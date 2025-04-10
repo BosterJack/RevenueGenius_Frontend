@@ -309,6 +309,8 @@ import {
 } from "@/components/ui/card";
 import { AlertCircle, CheckCircle, Loader, Loader2 } from "lucide-react";
 import { usePaymentMethods } from "@/hooks/use-paymentMethods";
+import { useRouter } from "next/navigation";
+import { useSelected } from "@/app/provider";
 
 export function PaymentForm() {
   const stripe = useStripe();
@@ -329,7 +331,9 @@ export function PaymentForm() {
     type: "",
     message: "",
   });
+  const {setActiveTab}=useSelected()
   console.log("paymentMethods", paymentMethods);
+  const router =useRouter()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -384,7 +388,7 @@ export function PaymentForm() {
         };
         createPaymentMethod(paymentData, {
           onSuccess: () => {
-            console.log("Payment method added successfully!");
+            setActiveTab(`payment-methods`)
           },
         });
         console.log("Payment method data:", paymentData);

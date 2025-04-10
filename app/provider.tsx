@@ -6,6 +6,8 @@ interface SelectedContextValue {
   setSelected: (selected: null | unknown) => void;
    isGoalSuccess: boolean;
   setIsGoalSuccess: (isGoalSuccess: boolean) => void;
+  activeTab: string;
+  setActiveTab: (activeTab:string) => void;
 }
 
 const SelectedContext = createContext<SelectedContextValue | undefined>(undefined);
@@ -13,6 +15,7 @@ const SelectedContext = createContext<SelectedContextValue | undefined>(undefine
 export const SelectedProvider = ({ children }: { children: React.ReactNode }) => {
   const [selected, setSelected] = useState<null | unknown>(null);
 const [isGoalSuccess, setIsGoalSuccess] = useState(false);
+const [activeTab, setActiveTab] = useState("payment-methods");
 useEffect(() => {
   if (isGoalSuccess) {
     setTimeout(() => {
@@ -21,7 +24,7 @@ useEffect(() => {
   }
 })
   return (
-    <SelectedContext.Provider value={{ selected, setSelected ,isGoalSuccess, setIsGoalSuccess}}>
+    <SelectedContext.Provider value={{ selected, setSelected ,isGoalSuccess, setIsGoalSuccess,activeTab,setActiveTab}}>
       {children}
     </SelectedContext.Provider>
   );
