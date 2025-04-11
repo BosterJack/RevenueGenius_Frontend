@@ -4,6 +4,7 @@ import { BusinessGuard } from "@/components/business/business-guard";
 import { PlanGuard } from "@/components/plans/plans-guard";
 import { Sidebar } from "@/components/sidebar";
 import { TopNav } from "@/components/top-nav";
+import { Toaster } from "@/components/ui/toaster";
 import NextTopLoader from "nextjs-toploader";
 import type React from "react";
 
@@ -31,6 +32,7 @@ export default function DashboardLayout({
           </BusinessGuard>
         </PlanGuard>
       </main>
+       <Toaster />
     </div>
   );
 }

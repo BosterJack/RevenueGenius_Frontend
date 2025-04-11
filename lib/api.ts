@@ -78,7 +78,7 @@ export const subscriptionService = {
 
   // Cancel a subscription
   cancelSubscription: async (subscriptionId: string): Promise<any> => {
-    const response = await axiosClient.post(`/api/subscriptions/${subscriptionId}/cancel/`)
+    const response = await axiosClient.post(`/api/subscriptions/${subscriptionId}/cancel_subscription/`)
     return response.data
   },
 
