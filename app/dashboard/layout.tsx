@@ -18,7 +18,7 @@ export default function DashboardLayout({
       <NextTopLoader
         zIndex={1000}
         height={5}
-        color="#B91C1C"
+        color="#e6a54c"
         showSpinner={true}
       />
       <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[20] bg-white">
