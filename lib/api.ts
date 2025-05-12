@@ -36,6 +36,8 @@ markOneNotificationAsRead: async (notifData: any, notificationId: string): Promi
   const response = await axiosClient.post(`/api/notifications/${notificationId}/mark_as_read/`, notifData)
   return response.data
 },
+
+
   updateProfile: async (profileData: any): Promise<any> => {
   const response = await axiosClient.put("/api/users/update_profile/", profileData, {
     headers: {
@@ -44,6 +46,23 @@ markOneNotificationAsRead: async (notifData: any, notificationId: string): Promi
   });
   return response.data;
 },
+
+facebookCallback: async (authData: any): Promise<any> => {
+    const response = await axiosClient.post(`/api/oauth/facebook/callback/`, authData)
+    return response.data
+  },
+  googleCallback: async (authData: any): Promise<any> => {
+    const response = await axiosClient.post(`/api/oauth/google/callback/`, authData)
+    return response.data
+  },
+  stripeCallback: async (authData: any): Promise<any> => {
+    const response = await axiosClient.post(`/api/oauth/stripe/callback/`, authData)
+    return response.data
+  },
+  paypalCallback: async (authData: any): Promise<any> => {
+    const response = await axiosClient.post(`/api/oauth/paypal/callback/`, authData)
+    return response.data
+  },
 
 }
 

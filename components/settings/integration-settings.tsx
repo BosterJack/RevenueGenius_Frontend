@@ -7,6 +7,10 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ChromeIcon as Google, FileSpreadsheet, CreditCard, MessageSquare } from "lucide-react"
+import GoogleAuthButton from "../auth/google-auth-button"
+import FacebookAuthButton from "../auth/facebook-auth-button"
+import PayPalAuthButton from "../auth/paypal-auth-button"
+import StripeAuthButton from "../auth/stripe-auth-button"
 
 export function IntegrationSettings() {
   // État pour les intégrations
@@ -57,7 +61,13 @@ export function IntegrationSettings() {
     <div className="space-y-6">
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Intégrations connectées</h3>
-
+<div className="flex gap-4">
+          <GoogleAuthButton />
+          {/* <MicrosoftAuthButton /> */}
+          <FacebookAuthButton />
+          <PayPalAuthButton />
+          <StripeAuthButton />
+        </div>
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
