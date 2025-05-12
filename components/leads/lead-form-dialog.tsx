@@ -73,18 +73,38 @@ export function LeadFormDialog({ isOpen, onClose, lead }: LeadFormDialogProps) {
     setIsSubmitting(true);
     try {
       if (lead) {
-        await updateLead({ id: lead.id, data });
-        toast({
-          title: "Success",
-          description: "The lead has been saved successfully!",
+        await updateLead({ id: lead.id, data }, {
+          onSuccess: () => {
+            toast({
+              title: "Success",
+              description: "The lead has been updated successfully!",
+            });
+          },
+          onError: () => {
+            toast({
+              title: "Error",
+              description: "An error occurred while updating the lead.",
+            });
+          }
         });
+       
       } else {
-        await createLead(data);
-      }
-        toast({
-          title: "Success",
-          description: "The lead has been updated successfully!",
+        await createLead(data, {
+          onSuccess: () => {
+            toast({
+              title: "Success",
+              description: "The lead has been saved successfully!",
+            });
+          },
+          onError: () => {
+            toast({
+              title: "Error",
+              description: "An error occurred while saving the lead.",
+            });
+          }
         });
+      }
+        
       onClose();
       form.reset();
     } catch (error) {
@@ -211,7 +231,7 @@ export function LeadFormDialog({ isOpen, onClose, lead }: LeadFormDialogProps) {
                   <FormLabel>Potential Value (€)</FormLabel>
                   <FormControl>
                     <Input
-                      
+                      type="number"
                       placeholder="Potential value"
                       {...field}
                       // onChange={(e) =>
@@ -254,7 +274,7 @@ export function LeadFormDialog({ isOpen, onClose, lead }: LeadFormDialogProps) {
         </Form>
       </DialogContent>
     </Dialog>
-    <StatusToast status={isCreatingLead || isUpdatingLead ? "pending" : false ? "error" : isCreatingLeadSuccess || updatingLeadSuccess ? "success" : "idle"} />
+   
     </>
   );
 }
