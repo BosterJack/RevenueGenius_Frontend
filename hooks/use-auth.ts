@@ -104,7 +104,34 @@ const { data: notifications, isLoading: isLoadingNotifications } = useQuery({
       },
     })
 
-  
+  const facebookCallback = useMutation({
+  mutationFn: (data: any) => authService.facebookCallback(data),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["user"] })
+  }
+})
+
+const googleCallback = useMutation({
+  mutationFn: (data: any) => authService.googleCallback(data),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["user"] })
+  }
+})
+
+const stripeCallback = useMutation({
+  mutationFn: (data: any) => authService.stripeCallback(data),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["user"] })
+  }
+})
+
+const paypalCallback = useMutation({
+  mutationFn: (data: any) => authService.paypalCallback(data),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["user"] })
+  }
+})
+
   return {
     token,
     user,
@@ -132,7 +159,30 @@ const { data: notifications, isLoading: isLoadingNotifications } = useQuery({
     markOneNotificationAsRead:markOneNotificationAsRead.mutate,
     isMarkOneNotificationAsRead: markOneNotificationAsRead.isPending,
     markOneNotificationAsReadError: markOneNotificationAsRead.error,
-    markOneNotificationAsReadSuccess: markOneNotificationAsRead.isSuccess
+    markOneNotificationAsReadSuccess: markOneNotificationAsRead.isSuccess,
+
+
+
+    facebookCallback: facebookCallback.mutate,
+isFacebookCallbackPending: facebookCallback.isPending,
+facebookCallbackError: facebookCallback.error,
+facebookCallbackSuccess: facebookCallback.isSuccess,
+
+googleCallback: googleCallback.mutate,
+isGoogleCallbackPending: googleCallback.isPending,
+googleCallbackError: googleCallback.error,
+googleCallbackSuccess: googleCallback.isSuccess,
+
+stripeCallback: stripeCallback.mutate,
+isStripeCallbackPending: stripeCallback.isPending,
+stripeCallbackError: stripeCallback.error,
+stripeCallbackSuccess: stripeCallback.isSuccess,
+
+paypalCallback: paypalCallback.mutate,
+isPaypalCallbackPending: paypalCallback.isPending,
+paypalCallbackError: paypalCallback.error,
+paypalCallbackSuccess: paypalCallback.isSuccess,
+
   }
 }
 

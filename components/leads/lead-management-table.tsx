@@ -253,6 +253,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import type { Lead } from "@/types/leads"
+import { useToast } from "@/hooks/use-toast"
 
 interface LeadManagementTableProps {
   filter?: string
@@ -324,9 +325,23 @@ export function LeadManagementTable({ filter }: LeadManagementTableProps) {
     setIsDeleteDialogOpen(true)
   }
 
+  const {toast}=useToast()
+
   const confirmDelete = async () => {
     if (selectedLead) {
-      await deleteLead(selectedLead.id)
+      await deleteLead(selectedLead.id,{
+        onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "The lead has been deleted successfully!",
+        })
+      },
+        onError: () => {
+        toast({
+          title: "Error",
+          description: "An error occurred while deleting the lead.",
+        })
+      }})
       setIsDeleteDialogOpen(false)
       setSelectedLead(null)
     }

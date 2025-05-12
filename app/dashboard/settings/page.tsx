@@ -14,13 +14,13 @@ export default function SettingsPage() {
       </div>
 
       <Tabs defaultValue="profile" className="space-y-4">
-        {/* <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="business">Business</TabsTrigger>
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="subscription">Subscription</TabsTrigger>
-        </TabsList> */}
+        </TabsList>
 
         <TabsContent value="profile">
           <Card>
